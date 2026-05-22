@@ -12,8 +12,21 @@
     color: #f5f3ee;
     padding: 32px;
     min-height: 100vh;
+    position: relative;
   }
-  .container { max-width: 1280px; margin: 0 auto; }
+
+  /* 背景アニメーション（画面全体、固定） */
+  .bg-anim {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .container { max-width: 1280px; margin: 0 auto; position: relative; z-index: 1; }
   header {
     text-align: center;
     margin-bottom: 36px;
@@ -41,7 +54,10 @@
   }
 
   .canvas-area {
-    background: #2d2d4e;
+    background: rgba(45, 45, 78, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 0.5px solid rgba(201, 160, 74, 0.15);
     border-radius: 10px;
     padding: 18px;
   }
@@ -75,7 +91,10 @@
   }
 
   .controls {
-    background: #2d2d4e;
+    background: rgba(45, 45, 78, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 0.5px solid rgba(201, 160, 74, 0.15);
     border-radius: 10px;
     padding: 24px;
   }
@@ -171,6 +190,102 @@
 </style>
 </head>
 <body>
+
+<!-- 背景アニメーション（画面全体の固定背景） -->
+<svg class="bg-anim" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <radialGradient id="bgParticle">
+      <stop offset="0%" stop-color="#c9a04a" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#c9a04a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 奥: 大きな多角形（薄くゆっくり回転） -->
+  <g fill="none" stroke="#c9a04a" stroke-width="0.5" opacity="0.18">
+    <polygon points="200,400 280,355 360,400 360,500 280,545 200,500">
+      <animateTransform attributeName="transform" type="rotate" from="0 280 450" to="360 280 450" dur="80s" repeatCount="indefinite"/>
+    </polygon>
+    <polygon points="1000,200 1100,145 1200,200 1200,320 1100,375 1000,320">
+      <animateTransform attributeName="transform" type="rotate" from="360 1100 260" to="0 1100 260" dur="90s" repeatCount="indefinite"/>
+    </polygon>
+    <polygon points="1300,700 1380,655 1460,700 1460,800 1380,845 1300,800">
+      <animateTransform attributeName="transform" type="rotate" from="0 1380 750" to="360 1380 750" dur="100s" repeatCount="indefinite"/>
+    </polygon>
+  </g>
+
+  <!-- 中: 中サイズの多角形 -->
+  <g fill="none" stroke="#c9a04a" stroke-width="0.5">
+    <polygon points="700,500 730,480 760,500 760,540 730,560 700,540" opacity="0.35">
+      <animateTransform attributeName="transform" type="rotate" from="0 730 520" to="360 730 520" dur="30s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.15;0.5;0.15" dur="8s" repeatCount="indefinite"/>
+    </polygon>
+    <polygon points="1400,300 1430,280 1460,300 1460,340 1430,360 1400,340" opacity="0.35">
+      <animateTransform attributeName="transform" type="rotate" from="360 1430 320" to="0 1430 320" dur="35s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.15;0.5;0.15" dur="7s" repeatCount="indefinite"/>
+    </polygon>
+    <polygon points="100,150 124,134 148,150 148,182 124,198 100,182" opacity="0.3">
+      <animateTransform attributeName="transform" type="rotate" from="0 124 166" to="360 124 166" dur="32s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.1;0.4;0.1" dur="9s" repeatCount="indefinite"/>
+    </polygon>
+    <polygon points="500,850 525,834 550,850 550,882 525,898 500,882" opacity="0.3">
+      <animateTransform attributeName="transform" type="rotate" from="360 525 866" to="0 525 866" dur="40s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.1;0.4;0.1" dur="10s" repeatCount="indefinite"/>
+    </polygon>
+  </g>
+
+  <!-- 手前: 光の粒子 -->
+  <g>
+    <circle cx="160" cy="600" r="3" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="600;560;600" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="500" cy="120" r="2.5" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="120;90;120" dur="7s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="800" cy="200" r="3.5" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="200;160;200" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="900" cy="800" r="2.5" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="800;760;800" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1240" cy="720" r="3" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="720;680;720" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;0.95;0.3" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1500" cy="120" r="2.5" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="120;90;120" dur="7s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="360" cy="800" r="2" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="800;770;800" dur="9s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="640" cy="800" r="2.5" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="800;760;800" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1100" cy="400" r="2.5" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="400;360;400" dur="7s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="280" cy="350" r="2" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="350;320;350" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1450" cy="500" r="3" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="500;460;500" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="60" cy="900" r="2" fill="url(#bgParticle)">
+      <animate attributeName="cy" values="900;870;900" dur="7s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="7s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>
+
 <div class="container">
 
 <header>
